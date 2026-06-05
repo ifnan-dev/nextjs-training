@@ -1,6 +1,10 @@
 
 import { betterAuth } from "better-auth/minimal"
 import { prismaAdapter } from "better-auth/adapters/prisma"
+<<<<<<< HEAD
+=======
+import { nextCookies } from "better-auth/next-js"
+>>>>>>> 0f1ef1b (jobs apis)
 import { prisma } from "./db"
 
 export const auth = betterAuth({
@@ -11,6 +15,11 @@ export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL,
 
+<<<<<<< HEAD
+=======
+  plugins: [nextCookies()],
+
+>>>>>>> 0f1ef1b (jobs apis)
   emailAndPassword: {
     enabled: true,
   },
