@@ -1,5 +1,6 @@
 import Link from "next/link"
 
+import CreateJobLink from "@/components/CreateJobLink"
 import { getJobs } from "@/services/jobs.service"
 
 export default async function JobsPage() {
@@ -10,12 +11,7 @@ export default async function JobsPage() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-4xl font-bold">Available Jobs</h1>
 
-        <Link
-          href="/jobs/create"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg"
-        >
-          Create Job
-        </Link>
+        <CreateJobLink />
       </div>
 
       {jobs.length === 0 ? (

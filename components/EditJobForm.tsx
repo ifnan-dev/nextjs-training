@@ -9,6 +9,8 @@ import JobForm,
 }
 from "./JobForm"
 
+import { formatApiError } from "@/lib/format-api-error"
+
 export default function EditJobForm({
   jobId,
   job,
@@ -37,9 +39,8 @@ export default function EditJobForm({
       )
 
     if (!response.ok) {
-      alert(
-        "Failed to update job"
-      )
+      const body = await response.json()
+      alert(formatApiError(body.error))
       return
     }
 

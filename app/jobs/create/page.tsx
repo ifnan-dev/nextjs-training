@@ -12,8 +12,17 @@ export default function CreateJobPage() {
   const { data: session, isPending } = authClient.useSession()
 
   useEffect(() => {
-    if (!isPending && !session?.user) {
+    if (isPending) {
+      return
+    }
+
+    if (!session?.user) {
       router.push("/login")
+      return
+    }
+
+    if (session.user.role !== "CLIENT") {
+      router.push("/jobs")
     }
   }, [isPending, session, router])
 
@@ -36,7 +45,7 @@ export default function CreateJobPage() {
     router.push("/jobs")
   }
 
-  if (isPending || !session?.user) {
+  if (isPending || !session?.user || session.user.role !== "CLIENT") {
     return null
   }
 

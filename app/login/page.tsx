@@ -32,7 +32,14 @@ export default function LoginPage() {
 
       if (result.data) {
         router.refresh()
-        router.push("/")
+
+        const role = result.data.user.role
+
+        if (role === "CLIENT") {
+          router.push("/jobs/create")
+        } else {
+          router.push("/jobs")
+        }
       } else {
         alert(result.error?.message ?? "Invalid credentials")
       }

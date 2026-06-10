@@ -1,6 +1,7 @@
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 
 import EditJobForm from "@/components/EditJobForm"
+import { getSession } from "@/lib/server/session"
 import { getJobById } from "@/services/jobs.service"
 
 export default async function EditPage({
@@ -9,10 +10,19 @@ export default async function EditPage({
   params: Promise<{ jobId: string }>
 }) {
   const { jobId } = await params
+  const session = await getSession()
   const job = await getJobById(jobId)
 
   if (!job) {
     notFound()
+  }
+
+  if (!session?.user) {
+    redirect("/login")
+  }
+
+  if (session.user.id !== job.clientId) {
+    redirect(`/jobs/${jobId}`)
   }
 
   return (

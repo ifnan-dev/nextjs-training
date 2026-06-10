@@ -65,3 +65,12 @@ export async function deleteJob(
     }
   })
 }
+
+export async function getJobOwnerId(jobId: string) {
+  const job = await prisma.job.findUnique({
+    where: { id: jobId },
+    select: { clientId: true },
+  })
+
+  return job?.clientId ?? null
+}

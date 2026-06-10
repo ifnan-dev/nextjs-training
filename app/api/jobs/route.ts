@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server"
 
-import { auth } from "@/lib/auth"
+import { requireRoleFromRequest } from "@/lib/server/session-request"
 import { createJobSchema } from "@/lib/validations/job.schema"
 import { createJob, getJobs } from "@/services/jobs.service"
 
@@ -21,16 +21,13 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth.api.getSession({
-      headers: request.headers,
-    })
+    const authResult = await requireRoleFromRequest(request, ["CLIENT"])
 
-    if (!session?.user) {
-      return Response.json(
-        { error: "You must be logged in to create a job" },
-        { status: 401 },
-      )
+    if ("error" in authResult) {
+      return authResult.error
     }
+
+    const { session } = authResult
 
     const body = await request.json()
 
@@ -51,7 +48,7 @@ export async function POST(request: NextRequest) {
       clientId: session.user.id,
     })
 
-    return Response.json(job)
+    return Response.json(job, { status: 201 })
   } catch (error) {
     console.error("Failed to create job:", error)
 
