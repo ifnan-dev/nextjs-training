@@ -1,45 +1,31 @@
-import EditJobForm
-  from "@/components/EditJobForm"
+import { notFound } from "next/navigation"
 
-async function getJob(
-  jobId: string
-) {
-  const response = await fetch(
-    `http://localhost:3000/api/jobs/${jobId}`,
-    {
-      cache: "no-store",
-    }
-  )
-
-  if (!response.ok) {
-    throw new Error("Job not found")
-  }
-
-  return response.json()
-}
+import EditJobForm from "@/components/EditJobForm"
+import { getJobById } from "@/services/jobs.service"
 
 export default async function EditPage({
   params,
 }: {
-  params: Promise<{
-    jobId: string
-  }>
+  params: Promise<{ jobId: string }>
 }) {
-  const { jobId } =
-    await params
+  const { jobId } = await params
+  const job = await getJobById(jobId)
 
-  const job =
-    await getJob(jobId)
+  if (!job) {
+    notFound()
+  }
 
   return (
     <div className="max-w-3xl mx-auto p-8">
-      <h1 className="text-4xl font-bold mb-6">
-        Edit Job
-      </h1>
+      <h1 className="text-4xl font-bold mb-6">Edit Job</h1>
 
       <EditJobForm
         jobId={jobId}
-        job={job}
+        job={{
+          title: job.title,
+          description: job.description,
+          budget: job.budget,
+        }}
       />
     </div>
   )

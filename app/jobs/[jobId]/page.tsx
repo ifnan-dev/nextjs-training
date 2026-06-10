@@ -1,48 +1,29 @@
 import Link from "next/link"
+import { notFound } from "next/navigation"
 
-async function getJob(
-  jobId: string
-) {
-  const response = await fetch(
-    `http://localhost:3000/api/jobs/${jobId}`,
-    {
-      cache: "no-store",
-    }
-  )
-
-  if (!response.ok) {
-    throw new Error("Job not found")
-  }
-
-  return response.json()
-}
+import { getJobById } from "@/services/jobs.service"
 
 export default async function JobPage({
   params,
 }: {
-  params: Promise<{
-    jobId: string
-  }>
+  params: Promise<{ jobId: string }>
 }) {
-  const { jobId } =
-    await params
+  const { jobId } = await params
+  const job = await getJobById(jobId)
 
-  const job =
-    await getJob(jobId)
+  if (!job) {
+    notFound()
+  }
 
   return (
     <div className="max-w-3xl mx-auto p-8">
-      <h1 className="text-4xl font-bold">
-        {job.title}
-      </h1>
+      <h1 className="text-4xl font-bold">{job.title}</h1>
 
-      <p className="mt-4">
-        {job.description}
-      </p>
+      <p className="mt-4">{job.description}</p>
 
-      <p className="mt-4">
-        Budget: ${job.budget}
-      </p>
+      <p className="mt-4">Budget: ${job.budget}</p>
+
+      <p className="mt-4 text-gray-600">Posted by: {job.client.name}</p>
 
       <div className="mt-8">
         <Link
