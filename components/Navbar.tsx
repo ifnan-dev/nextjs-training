@@ -7,63 +7,68 @@ export default function Navbar() {
   const user = session?.user
 
   return (
-    <nav className="bg-white border-b">
+    <nav className="sticky top-0 z-50 border-b border-border bg-surface/80 backdrop-blur supports-[backdrop-filter]:bg-surface/70">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <a href="/" className="text-2xl font-bold text-blue-600">
-              FreelanceHub
+          <div className="flex items-center gap-8">
+            <a
+              href="/"
+              className="text-xl font-bold tracking-tight text-foreground"
+            >
+              Freelance<span className="text-primary">Hub</span>
             </a>
-          </div>
 
-          <div className="hidden md:flex items-center space-x-6">
-            <a href="/skills" className="text-gray-700 hover:text-blue-600">
-              Skills
-            </a>
-          </div>
-
-          <div className="hidden md:flex items-center space-x-6">
-            {user?.role === "CLIENT" && (
+            <div className="hidden md:flex items-center gap-6 text-sm font-medium">
               <a
-                href="/jobs/create"
-                className="text-gray-700 hover:text-blue-600"
+                href="/skills"
+                className="text-muted hover:text-foreground transition-colors"
               >
-                Post a Job
+                Skills
               </a>
-            )}
-
-            <a href="/jobs" className="text-gray-700 hover:text-blue-600">
-              Jobs
-            </a>
+              {user?.role === "CLIENT" && (
+                <a
+                  href="/jobs/create"
+                  className="text-muted hover:text-foreground transition-colors"
+                >
+                  Post a Job
+                </a>
+              )}
+              <a
+                href="/jobs"
+                className="text-muted hover:text-foreground transition-colors"
+              >
+                Jobs
+              </a>
+            </div>
           </div>
 
           {isPending ? null : user ? (
             <div className="flex items-center gap-3">
-              <span className="text-gray-800 font-medium">
+              <span className="text-sm text-foreground font-medium">
                 {user.name}
-                <span className="text-xs text-gray-400 ml-2">
-                  ({user.role})
+                <span className="ml-2 inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                  {user.role}
                 </span>
               </span>
               <button
                 type="button"
                 onClick={() => authClient.signOut()}
-                className="text-gray-600 hover:text-blue-600 text-sm"
+                className="text-sm text-muted hover:text-foreground transition-colors"
               >
                 Sign out
               </button>
             </div>
           ) : (
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center gap-2">
               <a
                 href="/login"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                className="px-4 py-2 rounded-lg text-sm font-medium text-foreground hover:bg-foreground/5 transition-colors"
               >
                 Log in
               </a>
               <a
                 href="/register"
-                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-primary hover:bg-primary-hover shadow-sm transition-colors"
               >
                 Register
               </a>

@@ -52,40 +52,55 @@ export default function Home() {
   const featuredJobs = jobs.filter((job) => job.featured);
 
   return (
-    <>
+    <div className="max-w-5xl mx-auto">
+      <section className="mb-10 rounded-2xl bg-gradient-to-br from-primary to-accent px-8 py-12 text-white shadow-sm">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
+          Find your next opportunity
+        </h1>
+        <p className="mt-3 max-w-xl text-white/90">
+          Browse open jobs from top companies, or post your own and hire
+          skilled freelancers on FreelanceHub.
+        </p>
+        <a
+          href="/jobs"
+          className="mt-6 inline-flex items-center rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-primary shadow-sm hover:bg-white/90 transition-colors"
+        >
+          Browse all jobs
+        </a>
+      </section>
 
-      <main className="flex-1 max-w-5xl mx-auto px-4 py-8">
-        <section className="grid gap-6 sm:grid-cols-2">
-          <div className="bg-blue-100 border border-blue-300 rounded-lg p-6 text-center">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
-              Featured Jobs
-            </h2>
+      <section className="grid gap-6 lg:grid-cols-2">
+        <div className="rounded-2xl border border-border bg-surface p-6">
+          <h2 className="mb-4 text-lg font-semibold text-foreground">
+            ⭐ Featured Jobs
+          </h2>
 
-            {featuredJobs.map((job) => (
-              <JobCard
-                key={job.id}
-                title={job.title}
-                company={job.company}
-                budget={job.budget}
-              />
-            ))}
-          </div>
+          {featuredJobs.map((job) => (
+            <JobCard
+              key={job.id}
+              title={job.title}
+              company={job.company}
+              budget={job.budget}
+              featured
+            />
+          ))}
+        </div>
 
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
-              All Jobs
-            </h2>
-            {jobs.map((job) => (
-              <JobCard
-                key={job.id}
-                title={job.title}
-                company={job.company}
-                budget={job.budget}
-              />
-            ))}
-          </div>
-        </section>
-      </main>
-    </>
+        <div className="rounded-2xl border border-border bg-surface p-6">
+          <h2 className="mb-4 text-lg font-semibold text-foreground">
+            All Jobs
+          </h2>
+          {jobs.map((job) => (
+            <JobCard
+              key={job.id}
+              title={job.title}
+              company={job.company}
+              budget={job.budget}
+              featured={job.featured}
+            />
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }

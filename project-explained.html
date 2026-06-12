@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FreelanceHub — Function-by-Function Reference</title>
+<style>
+  :root{
+    --blue:#2563eb; --blue-dark:#1e3a8a; --green:#059669; --amber:#d97706;
+    --red:#dc2626; --purple:#7c3aed; --slate:#334155; --muted:#64748b;
+    --bg-soft:#f8fafc; --border:#e2e8f0;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:"Segoe UI",Helvetica,Arial,sans-serif; color:#1e293b;
+    line-height:1.6; margin:0; font-size:14px;}
+  .page{padding:44px 52px; max-width:960px; margin:0 auto;}
+  h1{font-size:30px; color:var(--blue-dark); margin:0 0 4px;
+    border-bottom:4px solid var(--blue); padding-bottom:10px;}
+  h2{font-size:21px; color:#fff; background:var(--blue);
+    padding:8px 14px; border-radius:8px; margin:38px 0 14px;}
+  h3{font-size:16px; color:var(--blue-dark); margin:24px 0 6px;
+    border-left:4px solid var(--amber); padding-left:10px;}
+  h4{font-size:13.5px; margin:0 0 6px; color:var(--blue-dark);}
+  p{margin:8px 0;}
+  code{background:#f1f5f9; color:var(--purple); padding:1px 6px;
+    border-radius:4px; font-family:"Consolas",monospace; font-size:12.5px;}
+  pre{background:#0f172a; color:#e2e8f0; padding:13px 15px; border-radius:8px;
+    overflow:auto; font-family:"Consolas",monospace; font-size:11.8px; line-height:1.5; margin:8px 0;}
+  pre .k{color:#93c5fd;} pre .s{color:#86efac;} pre .c{color:#64748b;font-style:italic;} pre .f{color:#fca5a5;}
+  .lead{font-size:14.5px; color:var(--slate); background:var(--bg-soft);
+    border:1px solid var(--border); border-left:5px solid var(--blue);
+    padding:13px 18px; border-radius:8px; margin:16px 0;}
+  ul{margin:6px 0 6px 4px; padding-left:22px;} li{margin:4px 0;}
+  table{border-collapse:collapse; width:100%; margin:12px 0; font-size:12.5px;}
+  th{background:var(--blue-dark); color:#fff; text-align:left; padding:8px 11px;}
+  td{border:1px solid var(--border); padding:7px 11px; vertical-align:top;}
+  tr:nth-child(even) td{background:var(--bg-soft);}
+  .tag{display:inline-block; padding:2px 9px; border-radius:999px; font-size:11px;
+    font-weight:600; color:#fff; margin-right:4px;}
+  .t-blue{background:var(--blue);} .t-green{background:var(--green);}
+  .t-amber{background:var(--amber);} .t-red{background:var(--red);}
+  .t-purple{background:var(--purple);} .t-slate{background:var(--slate);}
+  .note{background:#fef9c3; border:1px solid #fde047; border-left:5px solid var(--amber);
+    padding:11px 16px; border-radius:8px; margin:12px 0; font-size:13px;}
+  .muted{color:var(--muted); font-size:12.5px;}
+  .flow{background:var(--bg-soft); border:1px dashed var(--blue);
+    padding:11px 16px; border-radius:8px; font-family:"Consolas",monospace;
+    font-size:12px; color:var(--slate); margin:12px 0; line-height:1.7;}
+  /* function entry */
+  .fn{border:1px solid var(--border); border-radius:10px; margin:14px 0;
+    overflow:hidden; background:#fff;}
+  .fn > .sig{background:#0f172a; color:#e2e8f0; padding:9px 14px;
+    font-family:"Consolas",monospace; font-size:12.5px;}
+  .fn > .sig .name{color:#fbbf24; font-weight:700;}
+  .fn > .body{padding:11px 16px;}
+  .fn > .body p{margin:6px 0;}
+  .meta{margin:8px 0 2px;}
+  .meta b{color:var(--blue-dark);}
+  .file-h{background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px;
+    padding:8px 14px; margin:20px 0 6px; font-family:"Consolas",monospace;
+    font-size:13px; color:var(--blue-dark); font-weight:700;}
+  .toc{columns:2; column-gap:32px; font-size:12.5px; margin:10px 0;}
+  .toc a{color:var(--blue); text-decoration:none;}
+  footer{margin-top:44px; padding-top:14px; border-top:2px solid var(--border);
+    color:var(--muted); font-size:12px; text-align:center;}
+  @page{margin:14mm;}
+  h2,h3,h4,.file-h{page-break-after:avoid;}
+  pre,table,.fn,.lead,.note,.flow{page-break-inside:avoid;}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>FreelanceHub — Function-by-Function Reference</h1>
+<p class="muted">A complete walkthrough of every file and function in the project: what it takes, what it returns, and why it exists. FreelanceHub is a role-based freelance job-board built on Next.js 16, React 19, Prisma + PostgreSQL, Better Auth, and Zod.</p>
+
+<div class="lead">
+<strong>How to read this:</strong> the document is grouped by layer — <span class="tag t-green">Data layer</span> <span class="tag t-amber">Auth &amp; helpers</span> <span class="tag t-blue">API routes</span> <span class="tag t-purple">Pages</span> <span class="tag t-slate">Components</span>. Each function appears as a dark <em>signature bar</em> followed by an explanation of its <b>Inputs</b>, <b>Returns</b>, and <b>Logic</b>.
+</div>
+
+<h2>0. File Map</h2>
+<div class="toc">
+  <strong>lib/</strong> — db, auth, sessions, validation<br>
+  <strong>services/</strong> — jobs, applications<br>
+  <strong>app/api/</strong> — REST route handlers<br>
+  <strong>app/</strong> — pages (Server &amp; Client)<br>
+  <strong>components/</strong> — UI building blocks<br>
+  <strong>middleware.ts</strong> — route gate<br>
+  <strong>prisma/</strong> — schema &amp; migrations
+</div>
+
+<!-- ============ DATA / INFRA ============ -->
+<h2>1. Data &amp; Infrastructure Layer</h2>
+
+<div class="file-h">lib/db.ts — the Prisma client singleton</div>
+<p>Creates one shared database connection for the whole app and caches it during development.</p>
+<div class="fn">
+  <div class="sig"><span class="name">prisma</span> : PrismaClient &nbsp;<span class="c">// exported singleton</span></div>
+  <div class="body">
+    <p><b>Why:</b> Next.js hot-reloads modules constantly in dev. Without caching, each reload would spawn a brand-new <code>PrismaClient</code> and exhaust the database's connection pool.</p>
+    <p><b>Logic:</b> it looks for an existing client on <code>globalThis.prisma</code>; if none exists it creates one (<code>?? new PrismaClient()</code>). In any non-production environment it stores the client back on <code>globalThis</code> so the next reload reuses it. In production a fresh single instance is used.</p>
+    <pre><span class="k">export const</span> prisma = globalForPrisma.prisma ?? <span class="k">new</span> PrismaClient()
+<span class="k">if</span> (process.env.NODE_ENV !== <span class="s">"production"</span>) globalForPrisma.prisma = prisma</pre>
+  </div>
+</div>
+
+<div class="file-h">prisma/schema.prisma — the data model</div>
+<p>Defines the tables and relationships. Five models plus an enum drive everything.</p>
+<table>
+<tr><th>Model</th><th>Purpose &amp; key fields</th></tr>
+<tr><td><b>UserRole</b> (enum)</td><td>Either <code>CLIENT</code> or <code>FREELANCER</code> — the backbone of all permissions.</td></tr>
+<tr><td><b>User</b></td><td>Account profile: <code>email</code> (unique), <code>role</code>, <code>bio</code>. Relations to sessions, accounts, <code>jobs</code> and <code>applications</code>.</td></tr>
+<tr><td><b>Session / Account / Verification</b></td><td>Tables required by Better Auth to store login sessions, credential records (incl. hashed <code>password</code>), and email tokens.</td></tr>
+<tr><td><b>Job</b></td><td><code>title</code>, <code>description</code>, <code>budget</code> (Int), and <code>clientId</code> → the owning User. Has many <code>applications</code>.</td></tr>
+<tr><td><b>Application</b></td><td>Links a <code>freelancerId</code> to a <code>jobId</code> with a <code>coverLetter</code>. <code>@@unique([freelancerId, jobId])</code> enforces <strong>one application per job per freelancer</strong> at the database level.</td></tr>
+</table>
+
+<!-- ============ AUTH ============ -->
+<h2>2. Authentication Setup</h2>
+
+<div class="file-h">lib/auth.ts — server-side Better Auth instance</div>
+<div class="fn">
+  <div class="sig"><span class="name">auth</span> = betterAuth({ &hellip; })</div>
+  <div class="body">
+    <p><b>Logic:</b> wires Better Auth to the database through the <code>prismaAdapter</code>, enables the <code>emailAndPassword</code> strategy, and installs the <code>nextCookies()</code> plugin so session cookies are set automatically in Next.js responses.</p>
+    <p><b>Key detail — custom fields:</b> <code>role</code> (required) and <code>bio</code> (optional) are declared under <code>user.additionalFields</code>. This is what lets a plain auth library carry the app's <code>CLIENT/FREELANCER</code> concept inside the session object.</p>
+    <p><b>Secrets:</b> reads <code>BETTER_AUTH_SECRET</code> and <code>BETTER_AUTH_URL</code> from the environment.</p>
+  </div>
+</div>
+
+<div class="file-h">lib/auth-client.ts — browser-side auth client</div>
+<div class="fn">
+  <div class="sig"><span class="name">authClient</span> = createAuthClient({ &hellip; })</div>
+  <div class="body">
+    <p><b>Returns:</b> a client exposing <code>signIn.email()</code>, <code>signUp.email()</code>, <code>signOut()</code>, and the <code>useSession()</code> React hook.</p>
+    <p><b>Key detail:</b> <code>inferAdditionalFields</code> mirrors the server's <code>role</code> field so the client-side session is fully typed and <code>session.user.role</code> is available in components.</p>
+  </div>
+</div>
+
+<div class="file-h">app/api/auth/[...all]/route.ts — auth endpoint</div>
+<div class="fn">
+  <div class="sig"><span class="k">export const</span> { <span class="name">GET, POST</span> } = toNextJsHandler(auth)</div>
+  <div class="body">
+    <p>A catch-all route (<code>[...all]</code>) that forwards <em>every</em> auth request (sign-in, sign-up, sign-out, session) to Better Auth in a single line. No custom logic needed.</p>
+  </div>
+</div>
+
+<!-- ============ SESSION HELPERS ============ -->
+<h2>3. Session &amp; Permission Guards</h2>
+<p>Two parallel files provide the same guards in two contexts: <code>session.ts</code> for <strong>Server Components/pages</strong> (reads cookies via <code>headers()</code>) and <code>session-request.ts</code> for <strong>API route handlers</strong> (reads from the passed <code>request</code>). Each guard returns a discriminated union — either <code>{ error: Response }</code> or a success object — so callers branch with <code>"error" in result</code>.</p>
+
+<div class="file-h">lib/server/session.ts (page context)</div>
+
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">getSession</span>() : Promise&lt;Session | null&gt;</div>
+  <div class="body">
+    <p><b>Logic:</b> calls <code>auth.api.getSession({ headers: await headers() })</code> to read the current user from the request cookies. Returns <code>null</code> if nobody is logged in.</p>
+  </div>
+</div>
+
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">requireSession</span>() : { error } | { session }</div>
+  <div class="body">
+    <p><b>Logic:</b> calls <code>getSession()</code>; if there is no <code>session.user</code> it returns <code>{ error: 401 "You must be logged in" }</code>. Otherwise returns <code>{ session }</code>.</p>
+  </div>
+</div>
+
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">requireRole</span>(allowedRoles: ("CLIENT"|"FREELANCER")[])</div>
+  <div class="body">
+    <p><b>Inputs:</b> a list of roles permitted to proceed.</p>
+    <p><b>Logic:</b> first runs <code>requireSession()</code> (bubbling up any 401). Then checks <code>session.user.role</code> against the allowed list; if not included, returns <code>{ error: 403 }</code>. Otherwise passes the session through.</p>
+  </div>
+</div>
+
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">requireJobOwner</span>(jobId: string) : { error } | { session, job }</div>
+  <div class="body">
+    <p><b>Logic:</b> requires a session, then loads the job via <code>getJobById(jobId)</code>. Returns <code>404</code> if the job is missing, <code>403</code> if <code>job.clientId !== session.user.id</code>. On success it conveniently returns <strong>both</strong> the <code>session</code> and the fetched <code>job</code> so the caller needn't query again.</p>
+  </div>
+</div>
+
+<div class="file-h">lib/server/session-request.ts (API context)</div>
+<p>Mirror images of the above — <code>getSessionFromRequest</code>, <code>requireSessionFromRequest</code>, <code>requireRoleFromRequest</code>, <code>requireJobOwnerFromRequest</code> — but each takes the <code>NextRequest</code> and reads <code>request.headers</code> instead of the global <code>headers()</code>. Behaviour and return shapes are identical.</p>
+<div class="note"><strong>Why two copies?</strong> Server Components can use the ambient <code>headers()</code> API, but API route handlers receive their own <code>request</code> object. Splitting them keeps each context using the correct cookie source.</div>
+
+<!-- ============ VALIDATION ============ -->
+<h2>4. Validation Schemas &amp; Error Formatting</h2>
+
+<div class="file-h">lib/validations/auth.ts</div>
+<table>
+<tr><th>Schema</th><th>Rules</th></tr>
+<tr><td><code>loginSchema</code></td><td><code>email</code> must be valid; <code>password</code> required (min 1).</td></tr>
+<tr><td><code>registerSchema</code></td><td><code>name</code> ≥ 2 chars, valid <code>email</code>, <code>password</code> ≥ 8 chars, <code>role</code> ∈ {FREELANCER, CLIENT}.</td></tr>
+</table>
+<p><code>LoginFormValues</code> and <code>RegisterFormValues</code> are derived with <code>z.infer</code>, giving forms their TypeScript types automatically.</p>
+
+<div class="file-h">lib/validations/job.schema.ts</div>
+<p><code>createJobSchema</code>: <code>title</code> ≥ 5 chars, <code>description</code> ≥ 20 chars, <code>budget</code> a number ≥ 50. Reused for both create and update.</p>
+
+<div class="file-h">lib/validations/application-schema.ts</div>
+<p><code>applyJobSchema</code>: <code>coverLetter</code> between 20 and 2000 characters.</p>
+
+<div class="file-h">lib/format-api-error.ts</div>
+<div class="fn">
+  <div class="sig"><span class="name">formatApiError</span>(error: unknown) : string</div>
+  <div class="body">
+    <p><b>Purpose:</b> turn the various error shapes an API may return into a single human-readable string for an <code>alert()</code>.</p>
+    <p><b>Logic:</b> if the error is already a string, return it. If it's a flattened Zod error object, collect all <code>fieldErrors</code> values (and fall back to <code>formErrors</code>), joining them with newlines. Otherwise return a generic <code>"Something went wrong"</code>.</p>
+  </div>
+</div>
+
+<!-- ============ SERVICES ============ -->
+<h2>5. Service Layer (all Prisma queries live here)</h2>
+
+<div class="file-h">services/jobs.service.ts</div>
+
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">createJob</span>(data: { title, description, budget, clientId }) : Job</div>
+  <div class="body"><p>Inserts a new job row owned by <code>clientId</code> and returns the created record.</p></div>
+</div>
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">getJobs</span>() : Job[]</div>
+  <div class="body"><p>Returns every job, <code>include</code>-ing its <code>client</code> (poster), newest first (<code>orderBy createdAt desc</code>). Powers the jobs list page.</p></div>
+</div>
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">getJobById</span>(jobId: string) : Job | null</div>
+  <div class="body"><p>Fetches a single job with its <code>client</code> and all <code>applications</code>. Used by the detail page and the ownership guard. Returns <code>null</code> if not found.</p></div>
+</div>
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">updateJob</span>(jobId, data: { title?, description?, budget? }) : Job</div>
+  <div class="body"><p>Updates the given fields of a job (all optional) and returns the updated row.</p></div>
+</div>
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">deleteJob</span>(jobId: string) : Job</div>
+  <div class="body"><p>Deletes the job by id.</p></div>
+</div>
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">getJobOwnerId</span>(jobId: string) : string | null</div>
+  <div class="body"><p>A lightweight lookup that selects only <code>clientId</code> — useful for ownership checks without loading the whole job. Returns <code>null</code> if the job doesn't exist.</p></div>
+</div>
+
+<div class="file-h">services/applications.service.ts</div>
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">createApplication</span>(data: { jobId, freelancerId, coverLetter }) : Application</div>
+  <div class="body"><p>Creates an application and returns it with the applicant's public <code>freelancer</code> fields (id, name, email, role) included.</p></div>
+</div>
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">getApplicationsByJobId</span>(jobId: string) : Application[]</div>
+  <div class="body"><p>Lists all applications for a job, newest first, each with the freelancer's name &amp; email. Shown to the job owner.</p></div>
+</div>
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">hasApplied</span>(jobId, freelancerId) : boolean</div>
+  <div class="body"><p>Looks up the unique <code>(freelancerId, jobId)</code> pair and returns <code>Boolean(application)</code>. Prevents duplicate applications and decides which UI to show.</p></div>
+</div>
+<div class="fn">
+  <div class="sig"><span class="k">async</span> <span class="name">getApplicationByFreelancerAndJob</span>(jobId, freelancerId) : Application | null</div>
+  <div class="body"><p>Returns the actual application record for that pair (or null) — the data-bearing counterpart to <code>hasApplied</code>.</p></div>
+</div>
+
+<!-- ============ API ROUTES ============ -->
+<h2>6. API Route Handlers</h2>
+
+<div class="file-h">app/api/jobs/route.ts</div>
+<div class="fn">
+  <div class="sig"><span class="k">export async function</span> <span class="name">GET</span>() : Response</div>
+  <div class="body"><p>Public. Calls <code>getJobs()</code> and returns the array as JSON. On failure logs and returns <code>500</code>.</p></div>
+</div>
+<div class="fn">
+  <div class="sig"><span class="k">export async function</span> <span class="name">POST</span>(request) : Response</div>
+  <div class="body">
+    <p><b>Create a job — CLIENT only.</b> Step by step:</p>
+    <ul>
+      <li><code>requireRoleFromRequest(request, ["CLIENT"])</code> → returns its error (401/403) if not a client.</li>
+      <li>Parse JSON body; coerce <code>budget</code> to a Number; <code>createJobSchema.safeParse(&hellip;)</code>.</li>
+      <li>On validation failure → <code>400</code> with the flattened Zod error.</li>
+      <li>Call <code>createJob({ ...data, clientId: session.user.id })</code> — the owner is taken from the <em>session</em>, never trusted from the body.</li>
+      <li>Return the new job with <code>201</code>.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="file-h">app/api/jobs/[jobId]/route.ts</div>
+<div class="fn">
+  <div class="sig"><span class="k">export async function</span> <span class="name">GET</span>(request, { params }) : Response</div>
+  <div class="body"><p>Awaits <code>params</code> to get <code>jobId</code>, fetches the job; returns <code>404</code> if missing, else the job JSON.</p></div>
+</div>
+<div class="fn">
+  <div class="sig"><span class="k">export async function</span> <span class="name">PUT</span>(request, { params }) : Response</div>
+  <div class="body"><p><b>Update — owner only.</b> Runs <code>requireJobOwnerFromRequest(request, jobId)</code>, re-validates the body with <code>createJobSchema</code>, then calls <code>updateJob()</code>. Returns the updated job or the appropriate error code.</p></div>
+</div>
+<div class="fn">
+  <div class="sig"><span class="k">export async function</span> <span class="name">DELETE</span>(request, { params }) : Response</div>
+  <div class="body"><p><b>Delete — owner only.</b> Ownership guard, then <code>deleteJob()</code>, returning <code>{ success: true }</code>.</p></div>
+</div>
+
+<div class="file-h">app/api/jobs/[jobId]/apply/route.ts</div>
+<div class="fn">
+  <div class="sig"><span class="k">export async function</span> <span class="name">POST</span>(request, { params }) : Response</div>
+  <div class="body">
+    <p><b>Apply to a job — FREELANCER only.</b> A chain of guards, each returning a specific status:</p>
+    <ul>
+      <li><code>requireRoleFromRequest(["FREELANCER"])</code> → 401/403.</li>
+      <li>Job must exist → else <code>404</code>.</li>
+      <li>Cannot be your own job (<code>job.clientId === session.user.id</code>) → <code>403</code>.</li>
+      <li>Cannot apply twice (<code>hasApplied</code>) → <code>409 Conflict</code>.</li>
+      <li><code>applyJobSchema.safeParse(body)</code> → <code>400</code> on bad input.</li>
+      <li>Create the application and return it with <code>201</code>.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ MIDDLEWARE ============ -->
+<h2>7. Middleware</h2>
+<div class="file-h">middleware.ts</div>
+<div class="fn">
+  <div class="sig"><span class="k">export function</span> <span class="name">middleware</span>(request: NextRequest) : NextResponse</div>
+  <div class="body">
+    <p><b>Runs before</b> matched routes render. Reads the session cookie with <code>getSessionCookie(request)</code>; if absent, redirects to <code>/login</code>, otherwise calls <code>NextResponse.next()</code> to continue.</p>
+    <p><b><code>config.matcher</code></b> limits it to private areas: <code>/dashboard/*</code>, <code>/jobs/create</code>, <code>/jobs/:jobId/edit</code>, <code>/messages/*</code>, <code>/profile/*</code>.</p>
+    <div class="note">This is only a <em>fast first gate</em> based on cookie presence — the API routes and pages still re-verify the real session and ownership, so security never depends on this check alone.</div>
+  </div>
+</div>
+
+<!-- ============ PAGES ============ -->
+<h2>8. Pages (App Router)</h2>
+
+<div class="file-h">app/layout.tsx — RootLayout</div>
+<p>Server Component wrapping every page. Loads the <code>Geist</code> / <code>Geist_Mono</code> fonts via <code>next/font</code>, sets global metadata, and renders the persistent <code>&lt;Navbar/&gt;</code>, the page <code>{children}</code>, and a footer with the current year.</p>
+
+<div class="file-h">app/page.tsx — Home (Client Component)</div>
+<p>Demonstrates client-side state: a <code>useEffect</code> + <code>setTimeout</code> shows the <code>&lt;Loading/&gt;</code> skeleton for 500&nbsp;ms, then renders two columns — <strong>Featured Jobs</strong> (filtered by <code>job.featured</code>) and <strong>All Jobs</strong> — from a hard-coded demo array, each rendered through <code>&lt;JobCard/&gt;</code>.</p>
+
+<div class="file-h">app/jobs/page.tsx — JobsPage (Server Component)</div>
+<p><code>async</code> component that calls <code>getJobs()</code> directly (no API round-trip), shows an empty state, or lists each job as a <code>&lt;Link&gt;</code> to its detail page. Renders <code>&lt;CreateJobLink/&gt;</code> in the header.</p>
+
+<div class="file-h">app/jobs/[jobId]/page.tsx — JobPage (Server Component)</div>
+<p>The richest page. Awaits <code>params</code>, loads the job (<code>notFound()</code> if missing), then reads the session and computes flags: <code>isOwner</code>, <code>isFreelancer</code>, <code>isClient</code>. Based on these it conditionally renders:</p>
+<ul>
+  <li><b>Owner</b> → <code>&lt;JobOwnerActions/&gt;</code> + the applicant list (loaded via <code>getApplicationsByJobId</code>).</li>
+  <li><b>Freelancer</b> → <code>&lt;ApplyJobForm/&gt;</code>, or a "already applied" message (decided by <code>hasApplied</code>).</li>
+  <li><b>Guest</b> → a login prompt. <b>Other client</b> → "only freelancers can apply".</li>
+</ul>
+
+<div class="file-h">app/jobs/create/page.tsx — CreateJobPage (Client Component)</div>
+<div class="fn">
+  <div class="sig"><span class="k">async function</span> <span class="name">createJob</span>(data: JobFormData)</div>
+  <div class="body"><p>POSTs the form to <code>/api/jobs</code> with credentials. On error, alerts a formatted message; on success, redirects to <code>/jobs</code>. A <code>useEffect</code> guard redirects non-clients/guests away, and the page renders <code>null</code> until the session is confirmed.</p></div>
+</div>
+
+<div class="file-h">app/jobs/[jobId]/edit/page.tsx — EditPage (Server Component)</div>
+<p>Server-side gate: loads job + session, calls <code>notFound()</code> if missing, <code>redirect("/login")</code> if logged out, and <code>redirect("/jobs/[id]")</code> if not the owner. Then renders <code>&lt;EditJobForm/&gt;</code> pre-filled with the job's current values.</p>
+
+<div class="file-h">app/login/page.tsx &amp; app/register/page.tsx (Client Components)</div>
+<div class="fn">
+  <div class="sig"><span class="k">async function</span> <span class="name">onSubmit</span>(data) &nbsp;<span class="c">// login</span></div>
+  <div class="body"><p>Validates via <code>useForm + zodResolver(loginSchema)</code>, calls <code>authClient.signIn.email()</code>, then <code>router.refresh()</code> and redirects by role (CLIENT → <code>/jobs/create</code>, else <code>/jobs</code>). Shows an alert on bad credentials.</p></div>
+</div>
+<div class="fn">
+  <div class="sig"><span class="k">async function</span> <span class="name">onSubmit</span>(data) &nbsp;<span class="c">// register</span></div>
+  <div class="body"><p>Validates with <code>registerSchema</code>, calls <code>authClient.signUp.email()</code> (passing the custom <code>role</code>), then redirects to <code>/login</code> on success.</p></div>
+</div>
+
+<div class="file-h">app/skills/page.tsx — SkillsPage (Server Component)</div>
+<p>Demonstrates server-side data fetching from an external API: <code>await fetch("jsonplaceholder&hellip;/users")</code>, then maps results into <code>&lt;UserCard/&gt;</code> components.</p>
+
+<div class="file-h">app/loading.tsx — Loading</div>
+<p>An App-Router special file shown automatically during navigation/suspense. Renders an animated <code>animate-pulse</code> skeleton mimicking the home layout.</p>
+
+<!-- ============ COMPONENTS ============ -->
+<h2>9. Components</h2>
+
+<div class="file-h">components/Navbar.tsx (Client)</div>
+<p>Uses <code>authClient.useSession()</code> to render adaptively: brand link + "Skills"/"Jobs" always; "Post a Job" only for <code>CLIENT</code>; when logged in shows the user's name, role and a <code>signOut()</code> button; otherwise Log in / Register buttons.</p>
+
+<div class="file-h">components/JobForm.tsx (Client) — shared create/edit form</div>
+<div class="fn">
+  <div class="sig"><span class="name">JobForm</span>({ defaultValues?, onSubmit, buttonText })</div>
+  <div class="body"><p>A reusable form wired with <code>useForm + zodResolver(createJobSchema)</code>. Renders title/description/budget inputs with inline error messages and a submit button that shows "Saving…" while <code>isSubmitting</code>. The parent supplies the <code>onSubmit</code> behaviour — so the same component powers both creation and editing.</p></div>
+</div>
+
+<div class="file-h">components/EditJobForm.tsx (Client)</div>
+<div class="fn">
+  <div class="sig"><span class="k">async function</span> <span class="name">updateJob</span>(data: JobFormData)</div>
+  <div class="body"><p>Wraps <code>JobForm</code> with <code>defaultValues</code> from the existing job. PUTs to <code>/api/jobs/[jobId]</code>; on success redirects to the job detail page, on error alerts the formatted message.</p></div>
+</div>
+
+<div class="file-h">components/ApplyJobForm.tsx (Client)</div>
+<div class="fn">
+  <div class="sig"><span class="k">async function</span> <span class="name">onSubmit</span>(data: ApplyJobFormValues)</div>
+  <div class="body"><p>Cover-letter form validated by <code>applyJobSchema</code>. POSTs to <code>/api/jobs/[jobId]/apply</code>; on success calls <code>router.refresh()</code> (re-rendering the server page into the "already applied" state) and alerts success.</p></div>
+</div>
+
+<div class="file-h">components/JobOwnerActions.tsx (Client)</div>
+<div class="fn">
+  <div class="sig"><span class="k">async function</span> <span class="name">handleDelete</span>()</div>
+  <div class="body"><p>Shows a <code>confirm()</code> dialog, then DELETEs <code>/api/jobs/[jobId]</code>, toggling a <code>deleting</code> state for the button label. On success navigates to <code>/jobs</code> and refreshes. Also renders an "Edit Job" link.</p></div>
+</div>
+
+<div class="file-h">components/CreateJobLink.tsx (Client)</div>
+<p>Reads the session and renders the "Create Job" link <em>only</em> if the user's role is <code>CLIENT</code> — returns <code>null</code> otherwise (and while the session is pending).</p>
+
+<div class="file-h">components/JobCard.tsx (Client)</div>
+<div class="fn">
+  <div class="sig"><span class="k">function</span> <span class="name">handleApply</span>()</div>
+  <div class="body"><p>Demo card with local <code>applied</code> state: clicking "Apply Now" sets <code>applied=true</code>, switching the button to a disabled "Applied". Displays title, company, and budget in ETB. (Used on the demo home page.)</p></div>
+</div>
+
+<div class="file-h">components/UserCard.tsx (Server-friendly)</div>
+<p>Pure presentational component rendering a user's <code>name</code> and <code>company.name</code> — consumed by the Skills page. Exports a <code>UserCardProps</code> type.</p>
+
+<!-- ============ FLOW RECAP ============ -->
+<h2>10. End-to-End Recap</h2>
+<div class="flow">
+<b>Post a job:</b> JobForm → POST /api/jobs → requireRole(CLIENT) → safeParse → createJob() → Prisma → 201 → /jobs<br><br>
+<b>Apply:</b> ApplyJobForm → POST /api/jobs/[id]/apply → requireRole(FREELANCER) → exists? own? duplicate? → safeParse → createApplication() → 201 → refresh<br><br>
+<b>View applicants:</b> JobPage (server) → getSession → isOwner → getApplicationsByJobId() → render list
+</div>
+
+<div class="lead">
+<strong>Design theme:</strong> every mutation passes the same gauntlet — <em>authenticate → authorize (role/ownership) → validate (Zod) → service → database</em> — and that gauntlet is repeated at the middleware, page, and API levels. Reads happen directly in Server Components for speed; writes go through typed REST routes.
+</div>
+
+<footer>
+FreelanceHub — Function-by-Function Reference &nbsp;•&nbsp; Generated 2026-06-12 &nbsp;•&nbsp; Next.js 16 · React 19 · Prisma · Better Auth · Zod
+</footer>
+
+</div>
+</body>
+</html>

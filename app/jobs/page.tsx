@@ -7,22 +7,30 @@ export default async function JobsPage() {
   const jobs = await getJobs()
 
   return (
-    <div className="max-w-5xl mx-auto p-8">
+    <div className="max-w-5xl mx-auto">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">Available Jobs</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          Available Jobs
+        </h1>
 
         <CreateJobLink />
       </div>
 
       {jobs.length === 0 ? (
-        <p className="text-gray-500">No jobs posted yet.</p>
+        <div className="rounded-2xl border border-dashed border-border bg-surface p-12 text-center text-muted">
+          No jobs posted yet.
+        </div>
       ) : (
-        <div className="space-y-4">
+        <div className="grid gap-4 sm:grid-cols-2">
           {jobs.map((job) => (
-            <Link key={job.id} href={`/jobs/${job.id}`}>
-              <div className="border rounded-lg p-5 hover:bg-gray-50">
-                <h2 className="text-xl font-semibold">{job.title}</h2>
-                <p>Budget: ${job.budget}</p>
+            <Link key={job.id} href={`/jobs/${job.id}`} className="group">
+              <div className="h-full rounded-xl border border-border bg-surface p-5 shadow-sm transition-all hover:shadow-md hover:border-primary/30">
+                <h2 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                  {job.title}
+                </h2>
+                <p className="mt-2 inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+                  ${job.budget}
+                </p>
               </div>
             </Link>
           ))}
